@@ -10,7 +10,7 @@
 # URL        : https://github.com/john-james-ai/DLStudio                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday July 21st 2022 12:33:56 pm                                                 #
-# Modified   : Thursday July 21st 2022 12:38:36 pm                                                 #
+# Modified   : Thursday July 21st 2022 12:52:33 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : BSD 3-clause "New" or "Revised" License                                             #
 # Copyright  : (c) 2022 John James                                                                 #
@@ -18,13 +18,9 @@
 import matplotlib.pyplot as plt
 
 # ------------------------------------------------------------------------------------------------ #
-def plot_predictions(
-    train_data=X_train,
-    train_labels=y_train,
-    test_data=X_test,
-    test_labels=y_test,
-    predictions=y_preds,
-):
+
+
+def plot_predictions(train_data, train_labels, test_data, test_labels, predictions):
     """
     Plots training data, test data and compares predictions.
     """
@@ -37,4 +33,3 @@ def plot_predictions(
     plt.scatter(test_data, predictions, c="r", label="Predictions")
     # Show the legend
     plt.legend()
-

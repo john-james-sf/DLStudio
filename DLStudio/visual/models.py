@@ -10,7 +10,7 @@
 # URL        : https://github.com/john-james-ai/DLStudio                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday July 21st 2022 12:30:56 pm                                                 #
-# Modified   : Thursday July 21st 2022 12:38:14 pm                                                 #
+# Modified   : Thursday July 21st 2022 12:50:46 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : BSD 3-clause "New" or "Revised" License                                             #
 # Copyright  : (c) 2022 John James                                                                 #
@@ -18,6 +18,8 @@
 import matplotlib.pyplot as plt
 
 # ------------------------------------------------------------------------------------------------ #
+
+
 def plot_loss(history, ylim=None):
     """Plots training and validation loss from the history object of a fitted model."""
     plt.plot(history.history["loss"], label="loss")
