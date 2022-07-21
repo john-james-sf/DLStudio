@@ -10,12 +10,11 @@
 # URL        : https://github.com/john-james-ai/DLStudio                                           #
 # ------------------------------------------------------------------------------------------------ #
 # Created    : Thursday July 21st 2022 12:30:56 pm                                                 #
-# Modified   : Thursday July 21st 2022 01:10:02 pm                                                 #
+# Modified   : Thursday July 21st 2022 01:19:21 pm                                                 #
 # ------------------------------------------------------------------------------------------------ #
 # License    : BSD 3-clause "New" or "Revised" License                                             #
 # Copyright  : (c) 2022 John James                                                                 #
 # ================================================================================================ #
-import tensorflow as tf
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
 import itertools
@@ -94,31 +93,47 @@ def plot_decision_boundary(model, X, y):
 
 
 # ------------------------------------------------------------------------------------------------ #
-def plot_confusion_matrix(y_test, y_preds):
+# Note: The following confusion matrix code is a remix of Scikit-Learn's
+# plot_confusion_matrix function - https://scikit-learn.org/stable/modules/generated/sklearn.metrics.plot_confusion_matrix.html
+# and Made with ML's introductory notebook - https://github.com/GokuMohandas/MadeWithML/blob/main/notebooks/08_Neural_Networks.ipynb
 
-    # Note: The following confusion matrix code is a remix of Scikit-Learn's
-    # plot_confusion_matrix function - https://scikit-learn.org/stable/modules/generated/sklearn.metrics.plot_confusion_matrix.html
-    # and Made with ML's introductory notebook - https://github.com/GokuMohandas/MadeWithML/blob/main/notebooks/08_Neural_Networks.ipynb
+# Our function needs a different name to sklearn's plot_confusion_matrix
+def make_confusion_matrix(y_true, y_pred, classes=None, figsize=(10, 10), text_size=15):
+    """Makes a labelled confusion matrix comparing predictions and ground truth labels.
 
-    figsize = (10, 10)
+    If classes is passed, confusion matrix will be labelled, if not, integer class values
+    will be used.
 
-    # Create the confusion matrix
+    Args:
+    y_true: Array of truth labels (must be same shape as y_pred).
+    y_pred: Array of predicted labels (must be same shape as y_true).
+    classes: Array of class labels (e.g. string form). If `None`, integer labels are used.
+    figsize: Size of output figure (default=(10, 10)).
+    text_size: Size of output figure text (default=15).
 
-    cm = confusion_matrix(y_test, tf.round(y_preds))
+    Returns:
+    A labelled confusion matrix plot comparing y_true and y_pred.
+
+    Example usage:
+    make_confusion_matrix(y_true=test_labels, # ground truth test labels
+                            y_pred=y_preds, # predicted labels
+                            classes=class_names, # array of class label names
+                            figsize=(15, 15),
+                            text_size=10)
+    """
+    # Create the confustion matrix
+    cm = confusion_matrix(y_true, y_pred)
     cm_norm = cm.astype("float") / cm.sum(axis=1)[:, np.newaxis]  # normalize it
-    n_classes = cm.shape[0]
+    n_classes = cm.shape[0]  # find the number of classes we're dealing with
 
-    # Let's prettify it
+    # Plot the figure and make it pretty
     fig, ax = plt.subplots(figsize=figsize)
-    # Create a matrix plot
     cax = ax.matshow(
         cm, cmap=plt.cm.Blues
-    )  # https://matplotlib.org/3.2.0/api/_as_gen/matplotlib.axes.Axes.matshow.html
+    )  # colors will represent how 'correct' a class is, darker == better
     fig.colorbar(cax)
 
-    # Create classes
-    classes = False
-
+    # Are there a list of classes?
     if classes:
         labels = classes
     else:
@@ -129,22 +144,17 @@ def plot_confusion_matrix(y_test, y_preds):
         title="Confusion Matrix",
         xlabel="Predicted label",
         ylabel="True label",
-        xticks=np.arange(n_classes),
+        xticks=np.arange(n_classes),  # create enough axis slots for each class
         yticks=np.arange(n_classes),
-        xticklabels=labels,
+        xticklabels=labels,  # axes will labeled with class names (if they exist) or ints
         yticklabels=labels,
     )
 
-    # Set x-axis labels to bottom
+    # Make x-axis labels appear on bottom
     ax.xaxis.set_label_position("bottom")
     ax.xaxis.tick_bottom()
 
-    # Adjust label size
-    ax.xaxis.label.set_size(20)
-    ax.yaxis.label.set_size(20)
-    ax.title.set_size(20)
-
-    # Set threshold for different colors
+    # Set the threshold for different colors
     threshold = (cm.max() + cm.min()) / 2.0
 
     # Plot the text on each cell
@@ -155,5 +165,5 @@ def plot_confusion_matrix(y_test, y_preds):
             f"{cm[i, j]} ({cm_norm[i, j]*100:.1f}%)",
             horizontalalignment="center",
             color="white" if cm[i, j] > threshold else "black",
-            size=15,
+            size=text_size,
         )
